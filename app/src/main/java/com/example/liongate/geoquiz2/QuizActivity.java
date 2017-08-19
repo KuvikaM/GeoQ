@@ -37,7 +37,7 @@ public class QuizActivity extends AppCompatActivity {
             new Question(R.string.question_americas,true),
     };
 
-
+    private boolean[] mSaveCheater = new boolean[mQuestionBank.length];
 
     private void updateQuestion(){
         //Log.d(TAG,"updating question text for question # " + mCurrentIndex, new Exception() );
@@ -52,6 +52,7 @@ public class QuizActivity extends AppCompatActivity {
 
         if (mIsCheater){
             messageRasId = R.string.judgment_toast;
+            mSaveCheater[mCurrentIndex] = true;
         }else
 
         if(userPressedTrue == answerIsTrue){
@@ -103,7 +104,7 @@ public class QuizActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 mCurrentIndex =(mCurrentIndex + 1) % mQuestionBank.length;
-                mIsCheater = false;
+                mIsCheater = mSaveCheater[mCurrentIndex];
                 updateQuestion();
             }
         });
@@ -114,7 +115,7 @@ public class QuizActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (mCurrentIndex>0){
                 mCurrentIndex =Math.abs(mCurrentIndex - 1) % mQuestionBank.length;
-                mIsCheater = false;
+                mIsCheater = mSaveCheater[mCurrentIndex];
                 updateQuestion();}
             }
         });
@@ -133,6 +134,7 @@ public class QuizActivity extends AppCompatActivity {
 
        if (savedInstanceState != null){
             mCurrentIndex = savedInstanceState.getInt(KEY_INDEX,0);
+           mIsCheater = savedInstanceState.getBoolean(KEY_INDEX,false);
         }
         updateQuestion();
     }
@@ -156,6 +158,7 @@ public class QuizActivity extends AppCompatActivity {
         super.onSaveInstanceState(savedInstanceState);
         Log.i(TAG, "onSaveInstanceState");
         savedInstanceState.putInt(KEY_INDEX,mCurrentIndex);
+        savedInstanceState.putBoolean(KEY_INDEX,mIsCheater);
     }
 
     @Override

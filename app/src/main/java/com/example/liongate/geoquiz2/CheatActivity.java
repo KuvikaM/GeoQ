@@ -13,10 +13,12 @@ public class CheatActivity extends AppCompatActivity {
 
     public static final String EXTRA_ANSWER_IS_TRUE = "com.geo.answer_is_true";
     public static final String EXTRA_ANSWER_SHOWN = "com.geo.answer_shown";
+    private static final String KEY_INDEX = "index";
 
     private boolean mAnswerIsTrue;
     private Button mShowAnswerButton;
     private TextView mAnswerTextView;
+    private boolean mIsAnswerShown ;
 
     public static Intent newIntent(Context packageContext,boolean answerIsTrue){
 
@@ -40,9 +42,19 @@ public class CheatActivity extends AppCompatActivity {
     }
 
     @Override
+    public  void  onSaveInstanceState(Bundle savedInstanceState){
+        super.onSaveInstanceState(savedInstanceState);
+        savedInstanceState.putBoolean(KEY_INDEX,mIsAnswerShown);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cheat);
+
+        if (savedInstanceState != null){
+            mIsAnswerShown = savedInstanceState.getBoolean(KEY_INDEX,false);
+        }
 
         mAnswerIsTrue = getIntent().getBooleanExtra(EXTRA_ANSWER_IS_TRUE,false);
 
@@ -54,7 +66,8 @@ public class CheatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 mAnswerTextView.setText(""+mAnswerIsTrue);
 
-                setAnswerShownResult(true);
+                mIsAnswerShown = true;
+                setAnswerShownResult(mIsAnswerShown);
             }
         });
 
